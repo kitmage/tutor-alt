@@ -46,6 +46,7 @@ class Course extends Tutor_Base {
 	 */
 	const PRICE_TYPE_FREE         = 'free';
 	const PRICE_TYPE_PAID         = 'paid';
+	const PRICE_TYPE_ENTITLEMENT  = 'entitlement';
 	const PRICE_TYPE_SUBSCRIPTION = 'subscription';
 
 	/**
@@ -599,7 +600,7 @@ class Course extends Tutor_Base {
 		if ( isset( $params['pricing'] ) ) {
 			$type = $params['pricing']['type'] ?? '';
 
-			if ( '' === $type || ! in_array( $type, array( self::PRICE_TYPE_FREE, self::PRICE_TYPE_PAID ), true ) ) {
+			if ( '' === $type || ! in_array( $type, array( self::PRICE_TYPE_FREE, self::PRICE_TYPE_PAID, self::PRICE_TYPE_ENTITLEMENT ), true ) ) {
 				$errors['pricing'] = __( 'Invalid price type', 'tutor' );
 			}
 
@@ -637,7 +638,7 @@ class Course extends Tutor_Base {
 		if ( isset( $params['pricing'] ) ) {
 			$type = $params['pricing']['type'] ?? '';
 
-			if ( '' === $type || ! in_array( $type, array( self::PRICE_TYPE_FREE, self::PRICE_TYPE_PAID, self::PRICE_TYPE_SUBSCRIPTION ), true ) ) {
+			if ( '' === $type || ! in_array( $type, array( self::PRICE_TYPE_FREE, self::PRICE_TYPE_PAID, self::PRICE_TYPE_SUBSCRIPTION, self::PRICE_TYPE_ENTITLEMENT ), true ) ) {
 				$errors['pricing'] = __( 'Invalid price type', 'tutor' );
 			}
 
@@ -2167,6 +2168,9 @@ class Course extends Tutor_Base {
 		}
 
 		$course_id = Input::post( 'tutor_course_id', 0, Input::TYPE_INT );
+		if ( tutor_utils()->is_course_entitlement_only( $course_id ) ) {
+			wp_die( esc_html__( 'Enrollment by invitation only.', 'tutor' ), '', array( 'response' => 403 ) );
+		}
 
 		/**
 		 * TODO: need to check purchase information
@@ -3149,6 +3153,9 @@ class Course extends Tutor_Base {
 		$is_allowed = apply_filters( 'tutor_allow_guest_attempt_enrollment', true, $course_id, $user_id );
 
 		if ( $course_id && $is_allowed ) {
+			if ( tutor_utils()->is_course_entitlement_only( $course_id ) ) {
+				return;
+			}
 			$is_purchasable = tutor_utils()->is_course_purchasable( $course_id );
 			if ( ! $is_purchasable ) {
 				EnrollmentModel::do_enroll( $course_id, $order_id = 0, $user_id );
@@ -3172,6 +3179,10 @@ class Course extends Tutor_Base {
 
 		if ( ! $course_id || ! $user_id ) {
 			wp_send_json_error( tutor_utils()->error_message( 'invalid_req' ) );
+		}
+
+		if ( tutor_utils()->is_course_entitlement_only( $course_id ) ) {
+			wp_send_json_error( __( 'Enrollment by invitation only.', 'tutor' ), 403 );
 		}
 
 		$password_protected = post_password_required( $course_id );
