@@ -4,15 +4,11 @@
 
 The inspected tree is Tutor LMS 4.0.6. `tutor.php` defines `TUTOR_VERSION` as the upstream-compatible `4.0.6`, defines `TUTOR_FILE`, loads `Tutor\\Tutor`, exposes `tutor_lms()`, and assigns `$GLOBALS['tutor']`. The Composer map retains every Tutor namespace. The course and enrollment post types and existing hook names are unchanged. No Tutor Pro source was present under `/workspace`, so proprietary runtime compatibility is **not executed**; releases must follow the manual gate below. WordPress dependency declarations and hard-coded `tutor/tutor.php` checks are satisfied only by the release ZIP's `tutor/` root. `Update URI` gives this distribution a non-WordPress.org update identity, while `KITMAGE_TUTOR_BUILD_VERSION` identifies the downstream build without changing `TUTOR_VERSION`.
 
-## Intentional upstream modifications (7 files)
+## Intentional upstream modifications (6 files)
 
 ### `tutor.php`
 
-**Reason:** bootstrap the in-plugin subsystem, publish a separate build ID, and prevent wordpress.org replacement. **Contract:** Tutor identity remains intact. **Risk:** low; reapply headers/bootstrap after upstream header changes.
-
-### `composer.json`
-
-**Reason:** register the isolated Kitmage namespace. **Contract:** existing Tutor mappings are unchanged. **Risk:** low.
+**Reason:** bootstrap the in-plugin subsystem, publish a separate build ID, prevent wordpress.org replacement, and provide a source-archive PSR-4 fallback when generated Composer files are absent. **Contract:** Tutor identity remains intact; production artifacts still use Composer's loader, while GitHub source archives no longer fatal before activation. **Risk:** low; reapply headers/bootstrap after upstream header changes and keep the fallback map synchronized with Composer.
 
 ### `classes/Course.php`
 

@@ -28,6 +28,8 @@ WooCommerce My Account adds **Training Enrollments**, authorized strictly by the
 
 Data is retained on deactivation and uninstall. Activation runs versioned `dbDelta` migration and flushes rewrite rules once.
 
+Production ZIPs contain Composer's generated loader. For developer or GitHub source archives where `vendor/autoload.php` has not been generated, `tutor.php` provides a narrowly scoped fallback for the namespaces mapped by this distribution so WordPress activation does not fail before Tutor can initialize. Composer remains the preferred release loader.
+
 ## Public hooks
 
 - `kitmage_training_entitlements/batch_created` — batch ID, Woo order ID, order-item ID.
