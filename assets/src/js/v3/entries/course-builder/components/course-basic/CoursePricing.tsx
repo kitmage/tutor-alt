@@ -82,11 +82,19 @@ const CoursePricing = () => {
           label: __('Paid', 'tutor'),
           value: 'paid',
         },
+        {
+          label: __('Entitlement Only', 'tutor'),
+          value: 'entitlement',
+        },
       ]
     : [
         {
           label: __('Free', 'tutor'),
           value: 'free',
+        },
+        {
+          label: __('Entitlement Only', 'tutor'),
+          value: 'entitlement',
         },
       ];
 

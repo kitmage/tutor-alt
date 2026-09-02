@@ -1144,6 +1144,12 @@ class Utils {
 		return apply_filters( 'is_course_purchasable', $is_purchaseable, $course_id );
 	}
 
+	/** Determine whether a course is restricted to Kitmage entitlement redemption. */
+	public function is_course_entitlement_only( $course_id = 0 ) {
+		$course_id = $this->get_post_id( $course_id );
+		return Course::PRICE_TYPE_ENTITLEMENT === $this->price_type( $course_id );
+	}
+
 	/**
 	 * Get course price in digits format if any.
 	 *

@@ -11,6 +11,7 @@
  * Tested up to: 7.0
  * License: GPLv2 or later
  * Text Domain: tutor
+ * Update URI: https://github.com/kitmage/tutor-alt
  *
  * @package Tutor
  */
@@ -29,6 +30,10 @@ require_once __DIR__ . '/vendor/autoload.php';
 define( 'TUTOR_VERSION', '4.0.6' );
 define( 'TUTOR_FILE', __FILE__ );
 define( 'TUTOR_ENV', 'PROD' ); // DEV || PROD.
+define( 'KITMAGE_TUTOR_BUILD_VERSION', '4.0.6-km.1' );
+
+require_once __DIR__ . '/kitmage/entitlements/Bootstrap.php';
+\Kitmage\Tutor\Entitlements\Bootstrap::register( TUTOR_FILE );
 
 /**
  * Load text domain for translations.

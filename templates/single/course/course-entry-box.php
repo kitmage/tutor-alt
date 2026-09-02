@@ -23,6 +23,8 @@ $is_public            = get_post_meta( get_the_ID(), '_tutor_is_public_course', 
 // Monetization info.
 $monetize_by    = tutor_utils()->get_option( 'monetize_by' );
 $is_purchasable = tutor_utils()->is_course_purchasable();
+$is_entitlement = tutor_utils()->is_course_entitlement_only();
+$is_public      = $is_public && ! $is_entitlement;
 
 // Get login url if.
 $is_tutor_login_disabled = ! tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true );
@@ -225,6 +227,12 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 				</a>
 			<?php
 			echo apply_filters( 'tutor/course/single/entry-box/is_public', ob_get_clean(), get_the_ID() );//phpcs:ignore
+		} elseif ( $is_entitlement ) {
+			?>
+			<div class="tutor-alert tutor-warning tutor-mt-28">
+				<div class="tutor-alert-text"><?php esc_html_e( 'Enrollment by invitation only', 'tutor' ); ?></div>
+			</div>
+			<?php
 		} else {
 			// The course enroll options like purchase or free enrollment.
 			$price = apply_filters( 'get_tutor_course_price', null, get_the_ID() );
