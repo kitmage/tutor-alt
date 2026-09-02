@@ -39,7 +39,7 @@ export type ContentDripType =
   | 'unlock_sequentially'
   | 'after_finishing_prerequisites'
   | '';
-export type PricingType = 'free' | 'paid';
+export type PricingType = 'free' | 'paid' | 'entitlement';
 export type CourseSellingOption = Prettify<TutorSellingOption | 'membership' | 'all'>;
 
 export interface CourseFormData {
@@ -53,7 +53,7 @@ export interface CourseFormData {
   post_author: User | null;
   thumbnail: WPMedia | null;
   video: CourseVideo;
-  course_price_type: string;
+  course_price_type: PricingType;
   course_price: string;
   course_sale_price: string;
   course_selling_option: CourseSellingOption;
@@ -492,9 +492,9 @@ export const convertCourseDataToPayload = (data: CourseFormData, slot_fields: st
     post_password: data.visibility === 'password_protected' ? data.post_password : '',
     post_author: data.post_author?.id ?? null,
     'pricing[type]': data.course_price_type,
-    ...(data.course_product_id || data.course_price_type === 'free'
+    ...(data.course_product_id || data.course_price_type === 'free' || data.course_price_type === 'entitlement'
       ? {
-          'pricing[product_id]': data.course_price_type === 'free' ? '-1' : data.course_product_id,
+          'pricing[product_id]': data.course_price_type === 'paid' ? data.course_product_id : '-1',
         }
       : {}),
 
