@@ -13,7 +13,8 @@
       "Tutor\\Traits\\": "traits/",
       "Tutor\\Ecommerce\\": "ecommerce/",
       "Tutor\\PaymentGateways\\": "ecommerce/PaymentGateways",
-      "Tutor\\GDPR\\": "GDPR/"
+      "Tutor\\GDPR\\": "GDPR/",
+      "Kitmage\\Tutor\\Entitlements\\": "kitmage/entitlements/"
     }
   },
   "autoload-dev": {
